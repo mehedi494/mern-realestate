@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { FaGoogle } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { config } from "../config";
 import { useNavigate } from "react-router-dom";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
+import Oauth from "../components/ui/Oauth/Oauth";
 
 export default function SignUp() {
   const [show, setShow] = useState(false);
@@ -48,7 +48,7 @@ export default function SignUp() {
       setLoading(false);
       setError(null);
       toast.success(data.message);
-      navigate("/sign-in")
+      navigate("/sign-in");
     } catch (error) {
       setLoading(false);
       setError(error.message);
@@ -99,12 +99,12 @@ export default function SignUp() {
           id="confirmPassword"
         />
 
-        {error && <p className="text-xs text-orange-800 ">{error}</p>}
+       
         <p className="text-sm cursor-pointer" onClick={() => setShow(!show)}>
           {!show ? "show password" : "hide password"}
         </p>
         <button
-          disabled={loading||error}
+          disabled={loading || error}
           type="submit"
           className="bg-slate-700 rounded text-white hover:bg-slate-600  p-2 uppercase disabled:bg-opacity-50">
           {loading ? "Loading..." : "Sign up"}
@@ -116,13 +116,9 @@ export default function SignUp() {
           Sign in
         </Link>
       </div>
-      <hr className=" border my-3" />
-      <p className="-mt-6 text-center text-gray-700 ">or continue with</p>
-      <div className="flex items-center justify-center mt-4  bg-lime-700 rounded  text-white hover:bg-lime-600 focus:bg-black  p-2">
-        <FaGoogle />
-        <p className="ml-5"> Google</p>
-      </div>
-      
+      {/* error message component */}
+      {error && <p className="text-xs text-orange-800 ">{error}</p>}
+      <Oauth></Oauth>
     </div>
   );
 }
