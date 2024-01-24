@@ -36,7 +36,7 @@ export default function SignUp() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (data.status === false) {
+      if (data.success === false) {
         toast.error(data.errorMessage, {
           position: "bottom-right",
         });
