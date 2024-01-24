@@ -48,7 +48,7 @@ export default function SignIn() {
       }
      dispatch(signInSuccess(data))
       toast("Sign in Successfully");
-      navigate("/profile");
+      navigate("/");
     } catch (error) {
       dispatch(signInFailure(error.message))
     }
