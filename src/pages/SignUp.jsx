@@ -104,9 +104,9 @@ export default function SignUp() {
           {!show ? "show password" : "hide password"}
         </p>
         <button
-          disabled={loading}
+          disabled={loading||error}
           type="submit"
-          className="bg-slate-700 rounded text-white hover:bg-slate-600  p-2 uppercase disabled:bg-opacity-80">
+          className="bg-slate-700 rounded text-white hover:bg-slate-600  p-2 uppercase disabled:bg-opacity-50">
           {loading ? "Loading..." : "Sign up"}
         </button>
       </form>

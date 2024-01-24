@@ -4,28 +4,31 @@ import { Link } from "react-router-dom";
 import { config } from "../config";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import {useDispatch, useSelector} from "react-redux";
+import {signinStart,signInSuccess,signInFailure,} from "../redux/user/userSlice";
 
 export default function SignIn() {
   const [show, setShow] = useState(false);
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const {loading,error}= useSelector(state=>state.user)
 
   const handleOnChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
-    setError(" ");
+  
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    console.log(formData);
-    const uri = `${config.api}/auth/sign-in`;
-
+  
     try {
+      dispatch(signinStart())
+      const uri = `${config.api}/auth/sign-in`;
       const res = await fetch(uri, {
         method: "POST",
         headers: {
@@ -40,17 +43,14 @@ export default function SignIn() {
           position: "bottom-right",
         });
         // toast.info("Info Notification !", );
-        setError(data.message);
-        setLoading(false);
+        dispatch(signInFailure(data.message))
         return;
       }
-      setLoading(false);
-      setError(null);
+     dispatch(signInSuccess(data))
       toast("Sign in Successfully");
       navigate("/profile");
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(signInFailure(error.message))
     }
   };
 
