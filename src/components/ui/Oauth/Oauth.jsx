@@ -4,11 +4,15 @@ import { app } from "../../../firebase/firebase.config";
 import { config } from "../../../config";
 import { useDispatch } from "react-redux";
 import { signInFailure, signInSuccess } from "../../../redux/user/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 
 export default function Oauth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || "/";
+
+  
   const handleGoogle = async () => {
     try {
       const auth = getAuth(app);
@@ -29,7 +33,7 @@ export default function Oauth() {
       const data = await res.json();
 
       dispatch(signInSuccess(data));
-      navigate("/");
+      navigate(from,{replace:true});
     } catch (error) {
       console.log("could not sign in with google", error);
       dispatch(signInFailure());
@@ -37,7 +41,6 @@ export default function Oauth() {
   };
   return (
     <div>
-      {" "}
       <hr className=" border my-3" />
       <p className="-mt-6 text-center text-gray-700 ">or continue with</p>
       <button

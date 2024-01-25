@@ -3,18 +3,26 @@ import About from "../../pages/About";
 import Profile from "../../pages/Profile";
 import SignUp from "../../pages/SignUp";
 import Signin from "../../pages/Signin";
-import Main from "../layout/main";
+
 import Home from "../../pages/Home";
+import Main from "../layout/Main";
+import PrivateRoute from "../ui/PrivateRoute/PrivateRoute";
 
 const routes = createBrowserRouter([
   {
     path: "/",
     element: <Main></Main>,
-    children: [{ path: "/", element: <Home></Home> },
-  {
-    path:"about",
-    element:<About></About>
-  }],
+    children: [
+      { path: "/", element: <Home></Home> },
+      {
+        path: "about",
+        element: <About></About>,
+      },
+      {
+        path: "profile",
+        element: <PrivateRoute><Profile></Profile></PrivateRoute>,
+      },
+    ],
   },
   {
     path: "/sign-in",
@@ -28,9 +36,6 @@ const routes = createBrowserRouter([
     path: "/about",
     element: <About />,
   },
-  {
-    path: "/profile",
-    element: <Profile />,
-  },
+  
 ]);
 export default routes;

@@ -1,16 +1,15 @@
 import { useState } from "react";
 
-import { Link } from "react-router-dom";
-import { config } from "../config";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  signinStart,
-  signInSuccess,
-  signInFailure,
-} from "../redux/user/userSlice";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Oauth from "../components/ui/Oauth/Oauth";
+import { config } from "../config";
+import {
+  signInFailure,
+  signInSuccess,
+  signinStart,
+} from "../redux/user/userSlice";
 
 export default function SignIn() {
   const [show, setShow] = useState(false);
@@ -20,7 +19,8 @@ export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.user);
-
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || "/";
   const handleOnChange = (e) => {
     setFormData({
       ...formData,
@@ -52,7 +52,8 @@ export default function SignIn() {
       }
       dispatch(signInSuccess(data));
       toast("Sign in Successfully");
-      navigate("/");
+      console.log(from);
+      navigate(from,{replace:true});
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
