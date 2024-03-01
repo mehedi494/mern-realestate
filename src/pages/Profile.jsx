@@ -20,7 +20,7 @@ export default function Profile() {
   const [filePerc, setFilePerc] = useState(undefined);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser,loading,error } = useSelector((state) => state.user);
   const { userName, email } = currentUser;
   const fileRef = useRef(null);
   const dispatch = useDispatch();
@@ -152,7 +152,7 @@ export default function Profile() {
         <button
           // type="submit"
           className="bg-slate-700 hover:opacity-85 text-white uppercase p-3 border  rounded-lg">
-          update
+         {loading? 'Loading...':"UPDATE"}
         </button>
         {/* <button className="bg-green-700 hover:opacity-85 text-white uppercase p-3 border  rounded-lg">
           create listing
