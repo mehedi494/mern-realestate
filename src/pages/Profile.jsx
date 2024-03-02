@@ -12,6 +12,7 @@ import {
   userUpdateFailure,
   userUpdateStart,
   userUpdateSuccess,
+  signOut
 } from "../redux/user/userSlice";
 import { toast } from "react-toastify";
 
@@ -20,7 +21,7 @@ export default function Profile() {
   const [filePerc, setFilePerc] = useState(undefined);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const { currentUser,loading,error } = useSelector((state) => state.user);
+  const { currentUser, loading } = useSelector((state) => state.user);
   const { userName, email } = currentUser;
   const fileRef = useRef(null);
   const dispatch = useDispatch();
@@ -78,14 +79,14 @@ export default function Profile() {
       });
       const data = await res.json();
       if (data.success === false) {
-        toast.error("Update failed error occured!")
-       return dispatch(userUpdateFailure(data.message));
+        toast.error("Update failed error occured!");
+        return dispatch(userUpdateFailure(data.message));
       }
       dispatch(userUpdateSuccess(data));
-     return toast("Updated Successfully 🎉! ")
+      return toast("Updated Successfully 🎉! ");
     } catch (error) {
       dispatch(userUpdateFailure(error.message));
-      toast.error("❌ Update failed error occured!")
+      toast.error("❌ Update failed error occured!");
     }
   };
   return (
@@ -152,7 +153,7 @@ export default function Profile() {
         <button
           // type="submit"
           className="bg-slate-700 hover:opacity-85 text-white uppercase p-3 border  rounded-lg">
-         {loading? 'Loading...':"UPDATE"}
+          {loading ? "Loading..." : "UPDATE"}
         </button>
         {/* <button className="bg-green-700 hover:opacity-85 text-white uppercase p-3 border  rounded-lg">
           create listing
@@ -162,7 +163,9 @@ export default function Profile() {
         <button className="bg-red-500 p-2  text-white rounded-lg hover:opacity-85">
           Delete account
         </button>
-        <button className="bg-gray-500 p-2  text-white rounded-lg hover:opacity-85">
+        <button
+          onClick={()=>dispatch(signOut())}
+          className="bg-gray-500 p-2  text-white rounded-lg hover:opacity-85">
           Sign out
         </button>
       </div>
