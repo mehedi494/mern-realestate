@@ -19,7 +19,7 @@ export default function Oauth() {
       const googleProvider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, googleProvider);
       console.log("firebase", result.user);
-      const res = await fetch(`${config.api}/auth/google`, {
+      const res = await fetch(`${config.base_url}/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

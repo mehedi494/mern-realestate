@@ -32,7 +32,7 @@ export default function SignIn() {
 
     try {
       dispatch(signinStart());
-      const uri = `${config.api}/auth/sign-in`;
+      const uri = `${config.base_url}/auth/sign-in`;
       const res = await fetch(uri, {
         method: "POST",
         headers: {

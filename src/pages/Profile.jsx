@@ -6,15 +6,18 @@ import {
 } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { config } from "../config";
 import { app } from "../firebase/firebase.config";
 import {
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  signOut,
   userUpdateFailure,
   userUpdateStart,
   userUpdateSuccess,
-  signOut
 } from "../redux/user/userSlice";
-import { toast } from "react-toastify";
 
 export default function Profile() {
   const [file, setFile] = useState(undefined);
@@ -63,20 +66,23 @@ export default function Profile() {
     );
   };
 
-  const handleSubmit = async (e) => {
+  const handleUpdateUser = async (e) => {
     e.preventDefault();
     try {
       console.log(currentUser._id);
       dispatch(userUpdateStart());
-      console.log(`${config.api}/user/update/${currentUser._id}`);
-      const res = await fetch(`${config.api}/user/update/${currentUser._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
+      console.log(`${config.base_url}/user/update/${currentUser._id}`);
+      const res = await fetch(
+        `${config.base_url}/user/update/${currentUser._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
       if (data.success === false) {
         toast.error("Update failed error occured!");
@@ -89,12 +95,32 @@ export default function Profile() {
       toast.error("❌ Update failed error occured!");
     }
   };
+
+  const handleDeleteUser = async (user) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      dispatch(deleteUserStart());
+      const res = await fetch(`${config.base_url}/user/delete/${user._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        toast.error("Delete failed error occured!");
+        return dispatch(deleteUserFailure(data.message));
+      }
+      dispatch(deleteUserSuccess(data));
+      return toast("Deleted Successfully ��! ");
+    }
+  };
   return (
     <div className="p-5 max-w-lg mx-auto ">
       <h1 className="text-3xl font-semibold text-center text-slate-500 ">
         Profile
       </h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 ">
+      <form onSubmit={handleUpdateUser} className="flex flex-col gap-3 ">
         <input
           onChange={(e) => setFile(e.target.files[0])}
           type="file"
@@ -152,19 +178,24 @@ export default function Profile() {
         />
         <button
           // type="submit"
-          className="bg-slate-700 hover:opacity-85 text-white uppercase p-3 border  rounded-lg">
+
+          disabled={loading}
+          className="disabled:cursor-not-allowed bg-slate-700 hover:opacity-85 text-white uppercase p-3 border  rounded-lg">
           {loading ? "Loading..." : "UPDATE"}
+          {/*  update */}
         </button>
         {/* <button className="bg-green-700 hover:opacity-85 text-white uppercase p-3 border  rounded-lg">
           create listing
         </button> */}
       </form>
       <div className="flex justify-between mt-5">
-        <button className="bg-red-500 p-2  text-white rounded-lg hover:opacity-85">
+        <button
+          onClick={() => handleDeleteUser(currentUser)}
+          className="bg-red-500 p-2  text-white rounded-lg hover:opacity-85">
           Delete account
         </button>
         <button
-          onClick={()=>dispatch(signOut())}
+          onClick={() => dispatch(signOut())}
           className="bg-gray-500 p-2  text-white rounded-lg hover:opacity-85">
           Sign out
         </button>

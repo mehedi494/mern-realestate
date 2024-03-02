@@ -25,7 +25,7 @@ export default function SignUp() {
     e.preventDefault();
     setLoading(true);
     // console.log(formData);
-    const uri = `${config.api}/auth/sign-up`;
+    const uri = `${config.base_url}/auth/sign-up`;
     console.log(uri);
     try {
       const res = await fetch(uri, {
