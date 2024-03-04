@@ -59,7 +59,7 @@ export default function SignIn() {
       dispatch(signInFailure(error.message));
     }
   };
-
+console.log(error);
   return (
     <div className=" p-3 max-w-xs sm:max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold p-3 text-slate-500 uppercase">

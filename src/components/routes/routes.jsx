@@ -2,11 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import About from "../../pages/About";
 import Profile from "../../pages/Profile";
 import SignUp from "../../pages/SignUp";
-import Signin from "../../pages/Signin";
-
 import Home from "../../pages/Home";
 import Main from "../layout/Main";
 import PrivateRoute from "../ui/PrivateRoute/PrivateRoute";
+import CreateListing from "../../pages/CreateListing";
+import SignIn from "../../pages/SignIn";
 
 const routes = createBrowserRouter([
   {
@@ -26,11 +26,19 @@ const routes = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "create-listing",
+        element: (
+          <PrivateRoute>
+            <CreateListing></CreateListing>
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
     path: "/sign-in",
-    element: <Signin />,
+    element: <SignIn />,
   },
   {
     path: "/sign-up",
@@ -40,6 +48,5 @@ const routes = createBrowserRouter([
     path: "/about",
     element: <About />,
   },
- 
 ]);
 export default routes;

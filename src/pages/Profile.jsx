@@ -18,6 +18,7 @@ import {
   userUpdateStart,
   userUpdateSuccess,
 } from "../redux/user/userSlice";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const [file, setFile] = useState(undefined);
@@ -115,6 +116,27 @@ export default function Profile() {
       return toast("Deleted Successfully ��! ");
     }
   };
+
+  const handleSignOut = async () => {
+    try {
+      // console.log(`${config.base_url}/auth/sign-out`);
+      const res = await fetch(`${config.base_url}/auth/sign-out`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        toast.error("log out failed");
+        return dispatch(userUpdateFailure(data.message));
+      }
+      dispatch(signOut());
+      return toast("You are signed out!");
+    } catch (error) {
+      dispatch(userUpdateFailure(error.message));
+      toast.error("error occurred!");
+    }
+  };
+
   return (
     <div className="p-5 max-w-lg mx-auto ">
       <h1 className="text-3xl font-semibold text-center text-slate-500 ">
@@ -184,9 +206,11 @@ export default function Profile() {
           {loading ? "Loading..." : "UPDATE"}
           {/*  update */}
         </button>
-        {/* <button className="bg-green-700 hover:opacity-85 text-white uppercase p-3 border  rounded-lg">
+        <Link
+          to="/create-listing"
+          className="text-center bg-green-700 hover:opacity-85 text-white uppercase p-3 border  rounded-lg">
           create listing
-        </button> */}
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <button
@@ -195,7 +219,7 @@ export default function Profile() {
           Delete account
         </button>
         <button
-          onClick={() => dispatch(signOut())}
+          onClick={handleSignOut}
           className="bg-gray-500 p-2  text-white rounded-lg hover:opacity-85">
           Sign out
         </button>
