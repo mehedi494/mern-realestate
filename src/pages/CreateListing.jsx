@@ -9,7 +9,7 @@ import {
 import { app } from "../firebase/firebase.config";
 import { config } from "../config";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 export default function CreateListing() {
   const { currentUser } = useSelector((state) => state.user);
@@ -30,7 +30,6 @@ export default function CreateListing() {
   });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
-
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 const navigate = useNavigate()
@@ -127,7 +126,7 @@ const navigate = useNavigate()
     }
   };
 
-  console.log(formData);
+  // console.log(currentUser._id);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -143,7 +142,9 @@ const navigate = useNavigate()
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          
         },
+        credentials: "include",
         body: JSON.stringify({ ...formData, userRef: currentUser._id }),
       });
       const json = await response.json();
@@ -157,6 +158,9 @@ const navigate = useNavigate()
       setError(error);
     }
   };
+
+ 
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
@@ -375,8 +379,11 @@ const navigate = useNavigate()
             {loading ? "Loading" : "Create listing"}
           </button>
           {error && <p className=" text-red-700 text-sm">{error}</p>}
+          
         </div>
       </form>
+
+      
     </main>
   );
 }
