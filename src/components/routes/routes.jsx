@@ -34,6 +34,14 @@ const routes = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: `listing/:id`,
+        element: (
+          <PrivateRoute>
+            
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
