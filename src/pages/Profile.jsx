@@ -19,6 +19,7 @@ import {
   userUpdateSuccess,
 } from "../redux/user/userSlice";
 import { Link } from "react-router-dom";
+import Modal from "../components/ui/Modal";
 
 export default function Profile() {
   const [file, setFile] = useState(undefined);
@@ -27,6 +28,11 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [userListings, setUserListings] = useState([]);
   const [showListingsError, setShowListingsError] = useState(false);
+  // Separate state variables for each modal
+  const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState(false);
+  const [isDeleteListingModalOpen, setIsDeleteListingModalOpen] =
+    useState(false);
+
   const { currentUser, loading } = useSelector((state) => state.user);
   const { userName, email } = currentUser;
   const fileRef = useRef(null);
@@ -99,24 +105,36 @@ export default function Profile() {
     }
   };
 
+  const openDeleteUserModal = () => {
+    setIsDeleteUserModalOpen(true);
+  };
+  const closeDeleteUserModal = () => {
+    setIsDeleteUserModalOpen(false);
+  };
+
+  const openDeleteListingModal = () => {
+    setIsDeleteListingModalOpen(true);
+  };
+  const closeDeleteListingModal = () => {
+    setIsDeleteListingModalOpen(false);
+  };
+
   const handleDeleteUser = async (user) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      dispatch(deleteUserStart());
-      const res = await fetch(`${config.base_url}/user/delete/${user._id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      const data = await res.json();
-      if (data.success === false) {
-        toast.error("Delete failed error occured!");
-        return dispatch(deleteUserFailure(data.message));
-      }
-      dispatch(deleteUserSuccess(data));
-      return toast("Deleted Successfully ��! ");
+    dispatch(deleteUserStart());
+    const res = await fetch(`${config.base_url}/user/delete/${user._id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    const data = await res.json();
+    if (data.success === false) {
+      toast.error("Delete failed error occured!");
+      return dispatch(deleteUserFailure(data.message));
     }
+    dispatch(deleteUserSuccess(data));
+    return toast("Deleted Successfully ! ");
   };
 
   const handleSignOut = async () => {
@@ -158,6 +176,20 @@ export default function Profile() {
     } catch (error) {
       setShowListingsError(true);
     }
+  };
+
+  const handleDeleteListing = async (listingId) => {
+    setShowListingsError(false);
+    const res = await fetch(`${config.base_url}/listing/delete/${listingId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await res.json();
+    if (data.success === false) {
+      setShowListingsError(true);
+      return;
+    }
+    setUserListings((prev)=>prev.filter((listing)=>listing._id !== listingId))
   };
   return (
     <div className="p-5 max-w-lg mx-auto ">
@@ -205,6 +237,7 @@ export default function Profile() {
 
         <input
           title="email"
+          readOnly
           id="email"
           className="p-3 border  rounded-lg focus:outline-green-500"
           type="text"
@@ -242,7 +275,7 @@ export default function Profile() {
 
       <div className="flex justify-between mt-5">
         <button
-          onClick={() => handleDeleteUser(currentUser)}
+          onClick={openDeleteUserModal}
           className="bg-red-500 p-2  text-white rounded-lg hover:opacity-85">
           Delete account
         </button>
@@ -279,7 +312,7 @@ export default function Profile() {
 
               <div className="flex flex-col item-center">
                 <button
-                  /*  onClick={() => handleListingDelete(listing._id)} */
+                  onClick={openDeleteListingModal}
                   className="text-red-700 uppercase">
                   Delete
                 </button>
@@ -287,10 +320,27 @@ export default function Profile() {
                   <button className="text-green-700 uppercase">Edit</button>
                 </Link>
               </div>
+
+              {
+                <Modal
+                  isOpen={isDeleteListingModalOpen}
+                  closeModal={closeDeleteListingModal}
+                  confirmAction={() => handleDeleteListing(listing._id)&&setIsDeleteListingModalOpen(false)}
+                />
+              }
             </div>
           ))}
         </div>
       )}
+
+      {
+        <Modal
+          isOpen={isDeleteUserModalOpen}
+          closeModal={closeDeleteUserModal}
+          confirmAction={()=>handleDeleteUser(currentUser)}
+          /* currentUser={currentUser} */
+        />
+      }
     </div>
   );
 }
