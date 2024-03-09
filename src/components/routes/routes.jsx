@@ -7,6 +7,7 @@ import Main from "../layout/Main";
 import PrivateRoute from "../ui/PrivateRoute/PrivateRoute";
 import CreateListing from "../../pages/CreateListing";
 import SignIn from "../../pages/SignIn";
+import UpdateListing from "../../pages/UpdateListing";
 
 const routes = createBrowserRouter([
   {
@@ -35,10 +36,10 @@ const routes = createBrowserRouter([
         ),
       },
       {
-        path: `listing/:id`,
+        path: `update-listing/:id`,
         element: (
           <PrivateRoute>
-            
+            <UpdateListing />
           </PrivateRoute>
         ),
       },
