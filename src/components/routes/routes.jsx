@@ -8,6 +8,7 @@ import PrivateRoute from "../ui/PrivateRoute/PrivateRoute";
 import CreateListing from "../../pages/CreateListing";
 import SignIn from "../../pages/SignIn";
 import UpdateListing from "../../pages/UpdateListing";
+import Listing from "../../pages/Listing";
 
 const routes = createBrowserRouter([
   {
@@ -40,6 +41,14 @@ const routes = createBrowserRouter([
         element: (
           <PrivateRoute>
             <UpdateListing />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: `listing/:id`,
+        element: (
+          <PrivateRoute>
+            <Listing />
           </PrivateRoute>
         ),
       },

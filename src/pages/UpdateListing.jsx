@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from "react";
 
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { config } from "../config";
 import { app } from "../firebase/firebase.config";
 
@@ -47,6 +47,7 @@ export default function UpdateListing() {
     console.log(data);
     }
     fetchListing();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleImageSubmit = async (e) => {
