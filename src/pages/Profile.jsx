@@ -189,7 +189,9 @@ export default function Profile() {
       setShowListingsError(true);
       return;
     }
-    setUserListings((prev)=>prev.filter((listing)=>listing._id !== listingId))
+    setUserListings((prev) =>
+      prev.filter((listing) => listing._id !== listingId)
+    );
   };
   return (
     <div className="p-5 max-w-lg mx-auto ">
@@ -325,7 +327,10 @@ export default function Profile() {
                 <Modal
                   isOpen={isDeleteListingModalOpen}
                   closeModal={closeDeleteListingModal}
-                  confirmAction={() => handleDeleteListing(listing._id)&&setIsDeleteListingModalOpen(false)}
+                  confirmAction={() =>
+                    handleDeleteListing(listing._id) &&
+                    setIsDeleteListingModalOpen(false)
+                  }
                 />
               }
             </div>
@@ -337,7 +342,7 @@ export default function Profile() {
         <Modal
           isOpen={isDeleteUserModalOpen}
           closeModal={closeDeleteUserModal}
-          confirmAction={()=>handleDeleteUser(currentUser)}
+          confirmAction={() => handleDeleteUser(currentUser)}
           /* currentUser={currentUser} */
         />
       }
