@@ -9,6 +9,7 @@ import CreateListing from "../../pages/CreateListing";
 import SignIn from "../../pages/SignIn";
 import UpdateListing from "../../pages/UpdateListing";
 import Listing from "../../pages/Listing";
+import { Search } from "../../pages/Search";
 
 const routes = createBrowserRouter([
   {
@@ -54,11 +55,7 @@ const routes = createBrowserRouter([
       },
       {
         path: `search`,
-        element: (
-          <PrivateRoute>
-            
-          </PrivateRoute>
-        ),
+        element: <Search />,
       },
     ],
   },
@@ -70,6 +67,5 @@ const routes = createBrowserRouter([
     path: "/sign-up",
     element: <SignUp />,
   },
-  
 ]);
 export default routes;
