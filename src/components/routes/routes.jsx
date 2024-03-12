@@ -52,6 +52,14 @@ const routes = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: `search`,
+        element: (
+          <PrivateRoute>
+            
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
@@ -62,9 +70,6 @@ const routes = createBrowserRouter([
     path: "/sign-up",
     element: <SignUp />,
   },
-  {
-    path: "/about",
-    element: <About />,
-  },
+  
 ]);
 export default routes;
