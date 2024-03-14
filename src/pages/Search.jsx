@@ -119,11 +119,25 @@ export const Search = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
+  const onShowMoreClick = async () => {
+    const numberOfListings = listings.length;
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`${config.base_url}/listing?${searchQuery}`);
+    const data = await res.json();
+    if (data.data.length < 9) {
+      setShowMore(false);
+    }
+    setListings([...listings, ...data.data]);
+  };
+
   return (
     <div className="flex flex-col md:flex-row">
       {/* Left side  */}
-      <div className="p-7 border-b-2 sm:border-r-2 md:min-h-screen select-none">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+      <div className="p-7 border-b-2 sm:border-r-2 md:min-h-screen select-none max-w-[450px]">
+        <form onSubmit={handleSubmit} className="flex  flex-col gap-8">
           <div className="flex items-center gap-2">
             <label
               htmlFor="searchTerm"
@@ -254,19 +268,28 @@ export const Search = () => {
         <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
           Listing Result :
         </h1>
-        <div className="p-7 flex flex-wrap gap-4">
+        <div className="p-7 flex  flex-wrap gap-x-4 gap-y-6 ">
           {!loading && listings.length === 0 && (
             <p className="text-xl text-slate-400 text-center">
               No listing founds !
             </p>
           )}
-          {loading && <Spin text={`Please wait...`}></Spin>}
+          <div className="w-full flex justify-center">
+            {loading && <Spin text={`Please wait...`}></Spin>}
+          </div>
           {!loading &&
             listings &&
             listings.map((listing) => (
               <ListingItem key={listing} listing={listing} />
             ))}
         </div>
+        {showMore && (
+          <button
+            onClick={onShowMoreClick}
+            className="text-green-700 hover:underline p-7 w-full">
+            Show more
+          </button>
+        )}
       </div>
     </div>
   );
