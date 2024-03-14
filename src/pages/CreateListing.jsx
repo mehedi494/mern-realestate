@@ -9,7 +9,7 @@ import {
 import { app } from "../firebase/firebase.config";
 import { config } from "../config";
 import { useSelector } from "react-redux";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateListing() {
   const { currentUser } = useSelector((state) => state.user);
@@ -32,7 +32,8 @@ export default function CreateListing() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-const navigate = useNavigate()
+  const [progress, setProgress] = useState(null);
+  const navigate = useNavigate();
   const handleImageSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -72,8 +73,10 @@ const navigate = useNavigate()
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          const progress = Math.ceil(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setProgress(progress);
           console.log(`upload is ${progress}`);
         },
         (error) => {
@@ -135,31 +138,28 @@ const navigate = useNavigate()
         return setError("you must upload at least one image");
       if (+formData.regularPrice < +formData.discountPrice)
         return setError("discount price must be lower than regular price");
-      
+
       setLoading(true);
       setError(false);
       const response = await fetch(`${config.base_url}/listing`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          
         },
         credentials: "include",
         body: JSON.stringify({ ...formData, userRef: currentUser._id }),
       });
       const json = await response.json();
-      
+
       setLoading(false);
       if (json.success === false) setError(json.message);
       console.log(json._id);
-      navigate(`/listing/${json.data._id}`)
+      navigate(`/listing/${json.data._id}`);
     } catch (error) {
       console.log(error);
       setError(error);
     }
   };
-
- 
 
   return (
     <main className="p-3 max-w-4xl mx-auto">
@@ -352,7 +352,7 @@ const navigate = useNavigate()
               type="button"
               onClick={handleImageSubmit}
               className="p-2 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg  disabled:opacity-80">
-              {uploading ? "uploading..." : "upload"}
+              {uploading ? `uploading- (${progress}%)` : "upload"}
             </button>
           </div>
           <p className="text-red-700 text-sm">
@@ -375,15 +375,14 @@ const navigate = useNavigate()
                 </button>
               </div>
             ))}
-          <button disabled ={loading || uploading} className="p-3  bg-slate-700  text-white rounded-lg  uppercase  hover:opacity-95 disabled:opacity-80 disabled:cursor-not-allowed">
+          <button
+            disabled={loading || uploading}
+            className="p-3  bg-slate-700  text-white rounded-lg  uppercase  hover:opacity-95 disabled:opacity-80 disabled:cursor-not-allowed">
             {loading ? "Loading" : "Create listing"}
           </button>
           {error && <p className=" text-red-700 text-sm">{error}</p>}
-          
         </div>
       </form>
-
-      
     </main>
   );
 }

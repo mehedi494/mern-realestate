@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { config } from "../config";
+import Spin from "../components/ui/Spin";
+import ListingItem from "../components/ui/ListingItem";
 
 export const Search = () => {
   const [sidebardata, setSidebardata] = useState({
@@ -13,7 +15,7 @@ export const Search = () => {
     sort: "createdAt",
     order: "desc",
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [listings, setListings] = useState([]);
   const [showMore, setShowMore] = useState(false);
 
@@ -96,12 +98,12 @@ export const Search = () => {
     }
 
     const fetchListings = async () => {
-      setLoading(true);
+      // setLoading(true);
       setShowMore(false);
       const searchQuery = urlParams.toString();
       const res = await fetch(`${config.base_url}/listing?${searchQuery}`);
       const data = await res.json();
-      console.log(data.data);
+      // console.log(data.data);
       if (data.data.length > 8) {
         setShowMore(true);
       } else {
@@ -111,10 +113,10 @@ export const Search = () => {
       setLoading(false);
     };
 
-   setTimeout(( )=>{
-    fetchListings()
-   },2000)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setTimeout(() => {
+      fetchListings();
+    }, 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
   return (
@@ -248,10 +250,23 @@ export const Search = () => {
       </div>
 
       {/* Right side */}
-      <div className="">
+      <div className="flex-1">
         <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
-          Listing Result :{" "}
+          Listing Result :
         </h1>
+        <div className="p-7 flex flex-wrap gap-4">
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-400 text-center">
+              No listing founds !
+            </p>
+          )}
+          {loading && <Spin text={`Please wait...`}></Spin>}
+          {!loading &&
+            listings &&
+            listings.map((listing) => (
+              <ListingItem key={listing} listing={listing} />
+            ))}
+        </div>
       </div>
     </div>
   );

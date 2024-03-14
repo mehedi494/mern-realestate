@@ -38,13 +38,13 @@ export default function UpdateListing() {
   useEffect(() => {
     const fetchListing = async () => {
       const listingId = params.id;
-      const res = await fetch (`${config.base_url}/listing/${listingId}`)
+      const res = await fetch (`${config.base_url}/listing/get/${listingId}`)
       const data = await res.json();
       if(data.success === false) {
         setError(data.message)
     }
     setFormData(data.data)
-    console.log(data);
+    // console.log(data);
     }
     fetchListing();
   // eslint-disable-next-line react-hooks/exhaustive-deps
