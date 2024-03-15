@@ -2,6 +2,7 @@ import { FaSearch } from "react-icons/fa";
 import { Link ,useNavigate} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import logo from "../../../assets/logo.png"
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState("")
   const { currentUser } = useSelector((state) => state.user);
@@ -29,8 +30,9 @@ useEffect(()=>{
         <div className="flex justify-between items-center max-w-6xl m-auto p-3">
           <Link to="/">
             <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
+              <img className="inline w-10 mr-1" src={logo} alt="logo"/>
               <span className="text-slate-500">Real</span>
-              <span className="text-slate-700">EState</span>
+              <span className="text-slate-700">Estate</span>
             </h1>
           </Link>
 
@@ -56,7 +58,7 @@ useEffect(()=>{
                 <div>
                   {" "}
                   <img
-                    className="max-w-11  rounded-full max-h-auto object-cover border-2 border-orange-300  p-1"
+                    className="  rounded-full w-10 h-10  object-cover border-2 border-orange-300  p-1"
                     src={currentUser?.avatar}
                     alt=""
                   />
