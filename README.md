@@ -17,3 +17,6 @@ Using Technologies are:
   -Server [https://mern-realestate-backend-swyo.onrender.com/]
 
 
+  #NB : Recommended use Mozila fire fox browser
+
+
